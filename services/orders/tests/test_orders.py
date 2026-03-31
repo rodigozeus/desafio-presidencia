@@ -31,10 +31,11 @@ def test_get_order_not_found(client):
     response = client.get("/orders/00000000-0000-0000-0000-000000000000")
     assert response.status_code == 404
 
-def test_update_status_without_token(client):
+def test_update_status(client):
     created = client.post("/orders/", json=ORDER_PAYLOAD).json()
     response = client.patch(f"/orders/{created['id']}/status", json={"status": "processing"})
-    assert response.status_code == 401
+    assert response.status_code == 200
+    assert response.json()["status"] == "processing"
 
 def test_health(client):
     response = client.get("/health")

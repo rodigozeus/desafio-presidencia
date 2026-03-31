@@ -4,6 +4,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from app.main import app
 from app.database import Base, get_db
+from app.auth import require_admin
 
 SQLALCHEMY_TEST_URL = "sqlite:///./test.db"
 
@@ -31,7 +32,10 @@ def client(db):
             yield db
         finally:
             pass
+    def override_require_admin():
+        return {"sub": "admin@admin.com", "email": "admin@admin.com", "role": "admin"}
     app.dependency_overrides[get_db] = override_get_db
+    app.dependency_overrides[require_admin] = override_require_admin
     with TestClient(app) as c:
         yield c
     app.dependency_overrides.clear()

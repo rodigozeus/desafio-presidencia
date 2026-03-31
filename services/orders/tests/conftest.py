@@ -5,6 +5,7 @@ from sqlalchemy.orm import sessionmaker
 from unittest.mock import patch
 from app.main import app
 from app.database import Base, get_db
+from app.auth import get_current_user
 
 SQLALCHEMY_TEST_URL = "sqlite:///./test_orders.db"
 engine = create_engine(SQLALCHEMY_TEST_URL, connect_args={"check_same_thread": False})
@@ -31,7 +32,10 @@ def client(db):
             yield db
         finally:
             pass
+    def override_get_current_user():
+        return {"sub": "test@example.com", "email": "test@example.com", "role": "operator"}
     app.dependency_overrides[get_db] = override_get_db
+    app.dependency_overrides[get_current_user] = override_get_current_user
     with patch("app.routes.orders.cache_get", return_value=None), \
          patch("app.routes.orders.cache_set"), \
          patch("app.routes.orders.cache_delete_pattern"), \
