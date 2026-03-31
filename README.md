@@ -117,9 +117,9 @@ Usuários `operator` só têm acesso à área de pedidos (`/orders`), onde podem
 ## CI Pipeline
 
 GitHub Actions configurado em `.github/workflows/`:
-- `ci-users.yml` — roda testes do Users Service a cada push em `services/users/`
-- `ci-orders.yml` — roda testes do Orders Service a cada push em `services/orders/`
-- `ci-frontend.yml` — valida build dos MFEs a cada push em `frontend/`
+- `ci-users.yml` — roda testes do Users Service a cada push
+- `ci-orders.yml` — roda testes do Orders Service a cada push
+- `ci-frontend.yml` — valida build dos MFEs a cada push
 
 ## O Que Ficaria Diferente com Mais Tempo
 
