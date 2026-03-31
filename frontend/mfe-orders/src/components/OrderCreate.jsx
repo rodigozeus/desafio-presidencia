@@ -38,7 +38,7 @@ export default function OrderCreate() {
           unit_price: Number(i.unit_price),
         })),
       });
-      navigate(`/orders/${order.id}`);
+      navigate(`/orders/${order.order_number}`);
     } catch (err) {
       setError(err.message);
     } finally {
