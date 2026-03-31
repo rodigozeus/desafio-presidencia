@@ -12,94 +12,61 @@ Plataforma de gestão de pedidos para e-commerce, construída com arquitetura de
 
 ```mermaid
 graph TD
-    Browser["🌐 Navegador"]
+    Browser["Navegador"]
 
-    subgraph Tunnel["☁️ Cloudflare Tunnel (damaceno.org)"]
-        CF[cloudflared]
+    subgraph FE["Frontend"]
+        Shell["Shell · porta 3000\nReact + Module Federation"]
+        MFEOrders["MFE Orders · porta 3001"]
+        MFEAdmin["MFE Admin · porta 3002"]
     end
 
-    subgraph FE["Frontend — Nginx Alpine"]
-        Shell["Shell / Host\nporta 3000\nReact + Webpack Module Federation"]
-        MFEOrders["MFE Orders\nporta 3001\nRemote — remoteEntry.js"]
-        MFEAdmin["MFE Admin\nporta 3002\nRemote — remoteEntry.js"]
+    subgraph BE["Backend"]
+        Users["Users Service · porta 8001\nFastAPI — auth + usuários"]
+        Orders["Orders Service · porta 8002\nFastAPI — pedidos"]
     end
 
-    subgraph BE["Backend — FastAPI · Python 3.12"]
-        Users["Users Service\nporta 8001\nPOST /auth/login\nGET|POST /users/ ★"]
-        Orders["Orders Service\nporta 8002\nGET|POST /orders/\nPATCH /{id}/status"]
-    end
+    UsersDB[("PostgreSQL\nusers_db")]
+    OrdersDB[("PostgreSQL\norders_db")]
+    Redis[("Redis\ncache")]
+    Claude["Claude AI"]
 
-    subgraph Data["Dados"]
-        UsersDB[("PostgreSQL\nusers_db")]
-        OrdersDB[("PostgreSQL\norders_db")]
-        Redis[("Redis\ncache TTL 60s")]
-    end
+    Browser --> Shell
+    Shell -->|Module Federation| MFEOrders & MFEAdmin
 
-    Claude["Claude AI\nclaude-haiku-4-5"]
+    Shell -->|POST /auth/login| Users
+    MFEAdmin -->|Bearer JWT| Users
+    MFEOrders -->|Bearer JWT| Orders
 
-    Browser -->|HTTPS| CF
-    CF -->|HTTP interno| Shell
-    CF -->|HTTP interno| MFEOrders
-    CF -->|HTTP interno| MFEAdmin
-    CF -->|HTTP interno| Users
-    CF -->|HTTP interno| Orders
-
-    Shell -->|"Module Federation\n(remoteEntry.js)"| MFEOrders
-    Shell -->|"Module Federation\n(remoteEntry.js)"| MFEAdmin
-
-    Shell -->|"POST /auth/login\n→ JWT + role"| Users
-    MFEAdmin -->|"Bearer JWT ★\nPOST /users/"| Users
-    MFEOrders -->|"Bearer JWT\nREST"| Orders
-
-    Users -->|SQLAlchemy| UsersDB
-    Orders -->|SQLAlchemy| OrdersDB
-    Orders -->|"GET / SET / DEL\nordens:list:*"| Redis
-    Orders -->|"Anthropic SDK\nsugestão de prioridade"| Claude
+    Users --> UsersDB
+    Orders --> OrdersDB
+    Orders --> Redis
+    Orders -->|sugestão de prioridade| Claude
 ```
-
-> ★ requer JWT com `role=admin`
 
 ---
 
-### Composição dos Microfrontends (Module Federation)
+### Composição dos Microfrontends
 
 ```mermaid
 graph LR
-    subgraph Shell["Shell — Host (porta 3000)"]
-        Auth["AuthContext\nJWT · role · user"]
-        Router["React Router v6\n/ · /orders/* · /admin/*"]
-        PR["ProtectedRoute\n(exige JWT)"]
-        AR["AdminRoute\n(exige role=admin)"]
+    subgraph Shell["Shell — Host"]
+        PR["ProtectedRoute"]
+        AR["AdminRoute\n(role=admin)"]
     end
 
-    subgraph MFEOrders["MFE Orders — Remote (porta 3001)"]
-        RE1["remoteEntry.js"]
-        OA["OrdersApp\nexpose: ./OrdersApp"]
-        OL["OrdersList\n/orders"]
-        OC["OrderCreate\n/orders/new"]
-        OD["OrderDetail\n/orders/:id"]
+    subgraph O["MFE Orders — Remote"]
+        OA["OrdersApp\n/orders · /orders/new · /orders/:id"]
     end
 
-    subgraph MFEAdmin["MFE Admin — Remote (porta 3002)"]
-        RE2["remoteEntry.js"]
-        AA["AdminApp\nexpose: ./AdminApp"]
-        UC["UserCreate\n/admin/users/new"]
+    subgraph A["MFE Admin — Remote"]
+        AA["AdminApp\n/admin/users/new"]
     end
 
-    subgraph Shared["Dependências singleton (compartilhadas)"]
-        R["react 18.3"]
-        RD["react-dom 18.3"]
-        RR["react-router-dom 6"]
-    end
+    Shared(["react · react-dom\nreact-router-dom\nsingleton"])
 
-    Router --> PR & AR
-    PR -->|"lazy()\nmfe_orders/OrdersApp"| RE1
-    AR -->|"lazy()\nmfe_admin/AdminApp"| RE2
-
-    RE1 --> OA --> OL & OC & OD
-    RE2 --> AA --> UC
-
-    Shell & MFEOrders & MFEAdmin -.->|"singleton —\nnão duplicado"| Shared
+    PR -->|"lazy import"| OA
+    AR -->|"lazy import"| AA
+    Shell & O & A -.-> Shared
 ```
 
 **Fluxo de autenticação:**
