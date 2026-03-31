@@ -2,11 +2,7 @@ name: CI - Users Service
 
 on:
   push:
-    paths:
-      - "services/users/**"
   pull_request:
-    paths:
-      - "services/users/**"
 
 jobs:
   test:

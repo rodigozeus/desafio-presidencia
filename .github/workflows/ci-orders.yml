@@ -2,11 +2,7 @@ name: CI - Orders Service
 
 on:
   push:
-    paths:
-      - "services/orders/**"
   pull_request:
-    paths:
-      - "services/orders/**"
 
 jobs:
   test:
