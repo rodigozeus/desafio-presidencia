@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { fetchOrders } from "../api";
+import { fetchOrders, fetchOrderByNumber } from "../api";
 import "./OrdersList.css";
 
 const STATUS_LABELS = {
@@ -21,6 +21,8 @@ export default function OrdersList() {
   const [filter, setFilter] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [search, setSearch] = useState("");
+  const [searchError, setSearchError] = useState("");
 
   useEffect(() => {
     setLoading(true);
@@ -29,6 +31,19 @@ export default function OrdersList() {
       .catch((e) => setError(e.message))
       .finally(() => setLoading(false));
   }, [filter]);
+
+  async function handleSearch(e) {
+    e.preventDefault();
+    const n = parseInt(search, 10);
+    if (!n) return;
+    setSearchError("");
+    try {
+      const order = await fetchOrderByNumber(n);
+      navigate(`/orders/${order.id}`);
+    } catch {
+      setSearchError(`Pedido #${n} não encontrado.`);
+    }
+  }
 
   return (
     <div className="orders-page">
@@ -41,6 +56,18 @@ export default function OrdersList() {
           + Novo Pedido
         </button>
       </div>
+
+      <form className="orders-search" onSubmit={handleSearch}>
+        <input
+          type="number"
+          min="1"
+          placeholder="Buscar por número do pedido..."
+          value={search}
+          onChange={(e) => { setSearch(e.target.value); setSearchError(""); }}
+        />
+        <button type="submit">Buscar</button>
+        {searchError && <span className="search-error">{searchError}</span>}
+      </form>
 
       <div className="orders-filters">
         <label>Filtrar por status:</label>
@@ -72,6 +99,7 @@ export default function OrdersList() {
           <table className="orders-table">
             <thead>
               <tr>
+                <th>#</th>
                 <th>Cliente</th>
                 <th>Itens</th>
                 <th>Total</th>
@@ -84,6 +112,7 @@ export default function OrdersList() {
             <tbody>
               {orders.map((order) => (
                 <tr key={order.id} onClick={() => navigate(`/orders/${order.id}`)} className="order-row">
+                  <td className="order-number">#{order.order_number}</td>
                   <td>
                     <div className="customer-name">{order.customer_name}</div>
                     <div className="customer-email">{order.customer_email}</div>

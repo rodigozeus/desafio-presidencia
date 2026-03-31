@@ -28,9 +28,3 @@ def create_user(data: UserCreate, db: Session = Depends(get_db), _: dict = Depen
 def list_users(skip: int = 0, limit: int = 100, db: Session = Depends(get_db), _: dict = Depends(require_admin)):
     return db.query(User).offset(skip).limit(limit).all()
 
-@router.get("/{user_id}", response_model=UserResponse)
-def get_user(user_id: str, db: Session = Depends(get_db), _: dict = Depends(require_admin)):
-    user = db.query(User).filter(User.id == user_id).first()
-    if not user:
-        raise HTTPException(status_code=404, detail="Usuário não encontrado")
-    return user

@@ -1,12 +1,14 @@
 import json
 import logging
+import os
 import requests
 from typing import Optional
 
 logger = logging.getLogger(__name__)
 
-OLLAMA_URL = "http://localhost:11434/api/chat"
-OLLAMA_MODEL = "llama3.2"
+_OLLAMA_HOST = os.getenv("OLLAMA_HOST", "http://host.docker.internal:11434")
+OLLAMA_URL = f"{_OLLAMA_HOST}/api/chat"
+OLLAMA_MODEL = os.getenv("OLLAMA_MODEL", "llama3.2")
 
 def suggest_priority_and_summary(customer_name: str, items: list, notes: Optional[str] = None) -> dict:
     """Use Ollama (local) to suggest order priority and generate a summary."""

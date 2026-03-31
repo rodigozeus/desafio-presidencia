@@ -61,11 +61,14 @@ services:
     build: ./services/orders
     ports:
       - "8002:8002"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     environment:
       DATABASE_URL: postgresql://orders_user:orders_pass@orders-db:5432/orders_db
       JWT_SECRET: ${JWT_SECRET:-super-secret-key-change-in-production}
       REDIS_URL: redis://redis:6379/0
-      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
+      OLLAMA_HOST: ${OLLAMA_HOST:-http://host.docker.internal:11434}
+      OLLAMA_MODEL: ${OLLAMA_MODEL:-llama3.2}
     depends_on:
       orders-db:
         condition: service_healthy

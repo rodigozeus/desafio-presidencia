@@ -63,6 +63,18 @@ def create_order(
     logger.info(f"Order created: {order.id} priority={order.priority}")
     return order
 
+@router.get("/by-number/{order_number}", response_model=OrderResponse)
+def get_order_by_number(
+    order_number: int,
+    db: Session = Depends(get_db),
+    current_user: dict = Depends(get_current_user)
+):
+    from ..models import Order as OrderModel
+    order = db.query(OrderModel).filter(OrderModel.order_number == order_number).first()
+    if not order:
+        raise HTTPException(status_code=404, detail="Pedido não encontrado")
+    return order
+
 @router.get("/{order_id}", response_model=OrderResponse)
 def get_order(
     order_id: str,

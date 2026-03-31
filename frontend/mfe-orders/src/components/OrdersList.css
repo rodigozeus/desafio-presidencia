@@ -4,6 +4,13 @@
 .orders-count { color: #888; font-size: 0.9rem; }
 .btn-primary { background: #0f3460; color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-size: 0.95rem; font-weight: 500; transition: background 0.2s; }
 .btn-primary:hover { background: #1a4a7a; }
+.orders-search { display: flex; align-items: center; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
+.orders-search input { padding: 8px 12px; border: 1.5px solid #e0e0e0; border-radius: 8px; font-size: 0.9rem; width: 260px; outline: none; }
+.orders-search input:focus { border-color: #0f3460; }
+.orders-search button { padding: 8px 16px; background: #0f3460; color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 0.9rem; }
+.orders-search button:hover { background: #1a4a7a; }
+.search-error { color: #c00; font-size: 0.85rem; }
+.order-number { font-weight: 600; color: #0f3460; white-space: nowrap; }
 .orders-filters { display: flex; align-items: center; gap: 12px; margin-bottom: 24px; }
 .orders-filters label { font-weight: 500; color: #555; white-space: nowrap; }
 .filter-buttons { display: flex; gap: 8px; flex-wrap: wrap; }

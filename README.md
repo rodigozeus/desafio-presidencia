@@ -31,7 +31,7 @@ graph TD
     Ollama["Ollama\nllama3.2"]
 
     Browser --> Shell
-    Shell -->|Module Federation| MFEOrders & MFEAdmin
+    Shell --> MFEOrders & MFEAdmin
 
     Shell -->|POST /auth/login| Users
     MFEAdmin -->|Bearer JWT| Users
@@ -56,7 +56,7 @@ graph TD
 ### FastAPI (ao invés de Django)
 - Atende muito bem os requisitos: leve, rápido e direto ao ponto
 - Mais parecido com Flask, com o qual já tenho familiaridade
-- Geração automática de Swagger UI (`/docs`) sem nenhuma configuração extra — pontos bônus grátis
+- Geração automática de Swagger UI (`/docs`) sem nenhuma configuração extra
 
 ### Webpack Module Federation
 - Três MFEs independentes: Shell (host), Orders (pedidos), Admin (gestão de usuários)
@@ -90,7 +90,6 @@ graph TD
 | POST | `/auth/login` | — | Login — retorna JWT + dados do usuário |
 | POST | `/users/` | admin | Criar usuário (com seleção de papel) |
 | GET | `/users/` | admin | Listar usuários |
-| GET | `/users/{id}` | admin | Buscar usuário por ID |
 | GET | `/health` | — | Health check |
 
 ### Orders Service (porta 8002)
@@ -98,7 +97,8 @@ graph TD
 |--------|----------|------|-----------|
 | GET | `/orders/` | — | Listar pedidos (filtro `?status=`) |
 | POST | `/orders/` | — | Criar pedido (IA sugere prioridade) |
-| GET | `/orders/{id}` | — | Buscar pedido por ID |
+| GET | `/orders/by-number/{n}` | — | Buscar pedido pelo número sequencial |
+| GET | `/orders/{id}` | — | Buscar pedido por UUID |
 | PATCH | `/orders/{id}/status` | JWT | Atualizar status |
 | GET | `/health` | — | Health check |
 
@@ -114,8 +114,8 @@ graph TD
 
 **Login admin (criado automaticamente):** `admin@admin.com` / `admin123`
 
-O admin pode acessar `/admin` para criar novos usuários com papel `admin` ou `operator`.
-Usuários `operator` só têm acesso à área de pedidos (`/orders`).
+O admin pode acessar `/admin` para visualizar os usuários cadastrados e criar novos com papel `admin` ou `operator`.
+Usuários `operator` só têm acesso à área de pedidos (`/orders`), onde podem listar pedidos (com filtro por status), buscar um pedido pelo número, criar novos pedidos e atualizar o status de pedidos existentes.
 
 ## Testes
 
@@ -144,7 +144,7 @@ Obs: nesse momento os testes estão falhando devido a autenticação dos endpoin
 
 ## O Que Ficaria Diferente com Mais Tempo
 
-- **CRUD completo de usuários e pedidos:** hoje só é possível criar e listar — faltam edição e exclusão tanto no backend quanto nos MFEs.
+- **CRUD completo de usuários e pedidos:** hoje é possível criar, listar e buscar por número — faltam edição e exclusão tanto no backend quanto nos MFEs.
 - **Integração mais profunda com IA:** o Ollama hoje só sugere prioridade na criação do pedido. Com mais tempo, exploraria outras possibilidades. conversacional dentro do MFE.
 - **Paginação e filtros avançados:** a listagem de pedidos retorna tudo de uma vez; em produção seria necessário paginação e filtros por data, valor e cliente.
 - **Refresh token:** o JWT atual expira e força novo login. Implementaria um fluxo de refresh token silencioso.

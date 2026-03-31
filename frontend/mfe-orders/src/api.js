@@ -18,6 +18,14 @@ export async function fetchOrders(status = "") {
   return res.json();
 }
 
+export async function fetchOrderByNumber(number) {
+  const res = await fetch(`${ORDERS_API}/orders/by-number/${number}`, {
+    headers: authHeaders(),
+  });
+  if (!res.ok) throw new Error("Pedido não encontrado");
+  return res.json();
+}
+
 export async function fetchOrder(id) {
   const res = await fetch(`${ORDERS_API}/orders/${id}`, {
     headers: authHeaders(),

@@ -1,11 +1,14 @@
-import React from "react";
-import { Routes, Route } from "react-router-dom";
+import React, { useState } from "react";
 import UserCreate from "./components/UserCreate";
+import UserList from "./components/UserList";
 
 export default function AdminApp() {
+  const [refreshKey, setRefreshKey] = useState(0);
+
   return (
-    <Routes>
-      <Route index element={<UserCreate />} />
-    </Routes>
+    <>
+      <UserList refreshKey={refreshKey} />
+      <UserCreate onCreated={() => setRefreshKey((k) => k + 1)} />
+    </>
   );
 }

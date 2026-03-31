@@ -11,6 +11,17 @@ function authHeaders() {
   };
 }
 
+export async function listUsers() {
+  const res = await fetch(`${USERS_API}/users/`, {
+    headers: authHeaders(),
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.detail || `Erro ${res.status}`);
+  }
+  return res.json();
+}
+
 export async function createUser(data) {
   const res = await fetch(`${USERS_API}/users/`, {
     method: "POST",

@@ -1,9 +1,11 @@
 import uuid
 import enum
 from datetime import datetime, timezone
-from sqlalchemy import Column, String, DateTime, Enum as SAEnum, Float, JSON
+from sqlalchemy import Column, String, DateTime, Enum as SAEnum, Float, JSON, Integer, Sequence
 from sqlalchemy.dialects.postgresql import UUID
 from .database import Base
+
+order_number_seq = Sequence("order_number_seq")
 
 class OrderStatus(str, enum.Enum):
     pending = "pending"
@@ -21,6 +23,7 @@ class Order(Base):
     __tablename__ = "orders"
 
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    order_number = Column(Integer, order_number_seq, server_default=order_number_seq.next_value(), nullable=False, unique=True, index=True)
     customer_name = Column(String(255), nullable=False)
     customer_email = Column(String(255), nullable=False, index=True)
     items = Column(JSON, nullable=False, default=list)

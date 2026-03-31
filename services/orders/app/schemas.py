@@ -20,6 +20,7 @@ class OrderStatusUpdate(BaseModel):
 
 class OrderResponse(BaseModel):
     id: UUID
+    order_number: int
     customer_name: str
     customer_email: str
     items: List[Any]

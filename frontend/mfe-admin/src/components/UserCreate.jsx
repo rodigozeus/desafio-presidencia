@@ -4,7 +4,7 @@ import "./UserCreate.css";
 
 const INITIAL_FORM = { name: "", email: "", password: "", role: "operator" };
 
-export default function UserCreate() {
+export default function UserCreate({ onCreated }) {
   const [form, setForm] = useState(INITIAL_FORM);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -23,6 +23,7 @@ export default function UserCreate() {
       const user = await createUser(form);
       setSuccess(`Usuário "${user.name}" criado com sucesso.`);
       setForm(INITIAL_FORM);
+      onCreated?.();
     } catch (err) {
       setError(err.message);
     } finally {

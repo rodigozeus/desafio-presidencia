@@ -47,7 +47,7 @@ export default function OrderDetail() {
       <div className="detail-header">
         <button className="btn-back" onClick={() => navigate("/orders")}>← Pedidos</button>
         <div>
-          <h1>Pedido #{order.id.slice(0, 8).toUpperCase()}</h1>
+          <h1>Pedido #{order.order_number}</h1>
           <p className="detail-date">Criado em {new Date(order.created_at).toLocaleString("pt-BR")}</p>
         </div>
         <div className="header-badges">

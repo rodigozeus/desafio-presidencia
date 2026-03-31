@@ -1,0 +1,65 @@
+.user-list {
+  max-width: 700px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.user-list-title {
+  margin: 0 0 1.5rem;
+  font-size: 1.25rem;
+  color: #1a1a1a;
+}
+
+.user-list-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+.user-list-table th,
+.user-list-table td {
+  text-align: left;
+  padding: 0.625rem 0.75rem;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.user-list-table th {
+  font-weight: 600;
+  color: #374151;
+  background: #f9fafb;
+}
+
+.user-list-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.role-badge {
+  display: inline-block;
+  padding: 0.2rem 0.6rem;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+.role-admin {
+  background: #ede9fe;
+  color: #5b21b6;
+}
+
+.role-operator {
+  background: #e0f2fe;
+  color: #0369a1;
+}
+
+.user-list-status {
+  text-align: center;
+  color: #6b7280;
+  margin: 2rem auto;
+}
+
+.user-list-error {
+  color: #dc2626;
+}
