@@ -5,7 +5,7 @@ from typing import List, Optional
 from ..database import get_db
 from ..models import Order, OrderStatus
 from ..schemas import OrderCreate, OrderStatusUpdate, OrderResponse
-from ..auth import get_current_user, get_optional_user
+from ..auth import get_current_user
 from ..redis_client import cache_get, cache_set, cache_delete_pattern
 from ..ai_service import suggest_priority_and_summary
 
@@ -18,7 +18,7 @@ def list_orders(
     skip: int = 0,
     limit: int = 100,
     db: Session = Depends(get_db),
-    current_user: dict = Depends(get_optional_user)
+    current_user: dict = Depends(get_current_user)
 ):
     cache_key = f"orders:list:{status}:{skip}:{limit}"
     cached = cache_get(cache_key)
@@ -39,7 +39,7 @@ def list_orders(
 def create_order(
     data: OrderCreate,
     db: Session = Depends(get_db),
-    current_user: dict = Depends(get_optional_user)
+    current_user: dict = Depends(get_current_user)
 ):
     items_list = [item.model_dump() for item in data.items]
     total = sum(item["quantity"] * item["unit_price"] for item in items_list)
@@ -59,7 +59,7 @@ def create_order(
     db.add(order)
     db.commit()
     db.refresh(order)
-    cache_delete_pattern("orders:list:*")
+    cache_delete_pattern("orders:list:*") # deleta o cache no redis
     logger.info(f"Order created: {order.id} priority={order.priority}")
     return order
 
@@ -67,7 +67,7 @@ def create_order(
 def get_order(
     order_id: str,
     db: Session = Depends(get_db),
-    current_user: dict = Depends(get_optional_user)
+    current_user: dict = Depends(get_current_user)
 ):
     order = db.query(Order).filter(Order.id == order_id).first()
     if not order:

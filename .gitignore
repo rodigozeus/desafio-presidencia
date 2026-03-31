@@ -36,9 +36,6 @@ Thumbs.db
 # Claude Code local settings
 .claude/settings.local.json
 
-# Cloudflare Tunnel credentials
-cloudflared/*.json
-
 # Python
 __pycache__/
 *.py[cod]
@@ -46,5 +43,8 @@ __pycache__/
 venv/
 .venv/
 
-# Documentação interna (não subir)
+# Docs internos
 doc_interna/
+
+# credenciais da cloudflare
+cloudflared/*.json

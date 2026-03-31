@@ -82,17 +82,30 @@ services:
     build:
       context: ./frontend/mfe-orders
       args:
-        ORDERS_API_URL: http://localhost:8002
+        ORDERS_API_URL: https://api-orders.damaceno.org
     ports:
       - "3001:3001"
+
+  mfe-admin:
+    build:
+      context: ./frontend/mfe-admin
+      args:
+        USERS_API_URL: https://api-users.damaceno.org
+    ports:
+      - "3002:3002"
 
   shell:
     build:
       context: ./frontend/shell
+      args:
+        USERS_API_URL: https://api-users.damaceno.org
+        ORDERS_MFE_URL: https://mfe.damaceno.org
+        ADMIN_MFE_URL: https://mfe-admin.damaceno.org
     ports:
       - "3000:3000"
     depends_on:
       - mfe-orders
+      - mfe-admin
       - users-service
       - orders-service
 

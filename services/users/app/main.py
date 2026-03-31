@@ -1,7 +1,9 @@
 import logging
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from .database import Base, engine
+from .database import Base, engine, SessionLocal
+from .models import User
+from .auth import hash_password
 from .routes import auth, users
 import time
 
@@ -37,4 +39,18 @@ def health():
 
 @app.on_event("startup")
 def startup_event():
+    db = SessionLocal()
+    try:
+        if db.query(User).count() == 0:
+            admin = User(
+                name="Administrador",
+                email="admin@admin.com",
+                password_hash=hash_password("admin123"),
+                role="admin",
+            )
+            db.add(admin)
+            db.commit()
+            logger.info("Admin inicial criado: admin@admin.com")
+    finally:
+        db.close()
     logger.info("Users service started")

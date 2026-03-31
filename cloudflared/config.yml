@@ -1,4 +1,3 @@
-# Substitua TUNNEL_ID pelo ID gerado no passo 1
 tunnel: a22340df-4716-423b-bb5c-0f3c672db92e
 credentials-file: /etc/cloudflared/a22340df-4716-423b-bb5c-0f3c672db92e.json
 
@@ -7,5 +6,13 @@ ingress:
     service: http://shell:3000
   - hostname: www.damaceno.org
     service: http://shell:3000
+  - hostname: mfe.damaceno.org
+    service: http://mfe-orders:3001
+  - hostname: mfe-admin.damaceno.org
+    service: http://mfe-admin:3002
+  - hostname: api-users.damaceno.org
+    service: http://users-service:8001
+  - hostname: api-orders.damaceno.org
+    service: http://orders-service:8002
   # Regra catch-all obrigatória
   - service: http_status:404

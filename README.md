@@ -43,10 +43,9 @@ Plataforma interna de gestão de pedidos para e-commerce, construída com arquit
 ## Tecnologias Escolhidas
 
 ### FastAPI (não Django REST Framework)
-- Async-native, sem overhead de Django ORM para um PMV
-- Geração automática de Swagger/OpenAPI (item bônus incluso gratuitamente)
-- Pydantic para validação e serialização com type hints
-- Menos boilerplate: um `main.py` vs configuração completa de settings/urls/apps
+- Atende muito bem os requisitos: leve, rápido e direto ao ponto
+- Mais parecido com Flask, com o qual já tenho familiaridade
+- Geração automática de Swagger UI (`/docs`) e Redoc (`/redoc`) sem nenhuma configuração extra — pontos bônus grátis
 
 ### Webpack Module Federation
 - MFE de pedidos é um bundle **separado**, carregado em runtime pelo Shell

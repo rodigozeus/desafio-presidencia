@@ -7,7 +7,7 @@ module.exports = {
   entry: "./src/index.js",
   mode: process.env.NODE_ENV || "development",
   devServer: {
-    port: 3000,
+    port: 3002,
     historyApiFallback: true,
     headers: { "Access-Control-Allow-Origin": "*" },
   },
@@ -29,22 +29,15 @@ module.exports = {
           },
         },
       },
-      {
-        test: /\.css$/,
-        use: ["style-loader", "css-loader"],
-      },
+      { test: /\.css$/, use: ["style-loader", "css-loader"] },
     ],
   },
   plugins: [
     new ModuleFederationPlugin({
-      name: "shell",
-      remotes: {
-        mfe_orders: `mfe_orders@${
-          process.env.ORDERS_MFE_URL || "http://localhost:3001"
-        }/remoteEntry.js`,
-        mfe_admin: `mfe_admin@${
-          process.env.ADMIN_MFE_URL || "http://localhost:3002"
-        }/remoteEntry.js`,
+      name: "mfe_admin",
+      filename: "remoteEntry.js",
+      exposes: {
+        "./AdminApp": "./src/AdminApp",
       },
       shared: {
         react: { singleton: true, requiredVersion: "^18.3.0" },
@@ -52,14 +45,10 @@ module.exports = {
         "react-router-dom": { singleton: true },
       },
     }),
-    new HtmlWebpackPlugin({
-      template: "./public/index.html",
-    }),
+    new HtmlWebpackPlugin({ template: "./public/index.html" }),
     new webpack.DefinePlugin({
       "process.env.NODE_ENV": JSON.stringify(process.env.NODE_ENV || "development"),
       "process.env.USERS_API_URL": JSON.stringify(process.env.USERS_API_URL || ""),
-      "process.env.ORDERS_MFE_URL": JSON.stringify(process.env.ORDERS_MFE_URL || ""),
-      "process.env.ADMIN_MFE_URL": JSON.stringify(process.env.ADMIN_MFE_URL || ""),
     }),
   ],
 };

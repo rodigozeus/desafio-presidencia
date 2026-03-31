@@ -17,6 +17,11 @@ export default function Navigation() {
         <Link className={`nav-link ${location.pathname.startsWith("/orders") ? "active" : ""}`} to="/orders">
           Pedidos
         </Link>
+        {user?.role === "admin" && (
+          <Link className={`nav-link ${location.pathname.startsWith("/admin") ? "active" : ""}`} to="/admin">
+            Usuários
+          </Link>
+        )}
       </div>
       <div className="nav-user">
         <span className="nav-user-name">{user?.name}</span>
