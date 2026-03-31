@@ -124,10 +124,10 @@ GitHub Actions configurado em `.github/workflows/`:
 ## O Que Ficaria Diferente com Mais Tempo
 
 - **CRUD completo de usuários e pedidos:** hoje é possível criar, listar e buscar por número — faltam edição e exclusão tanto no backend quanto nos MFEs.
-- **Integração mais profunda com IA:** o Ollama hoje só sugere prioridade na criação do pedido. Com mais tempo, exploraria outras possibilidades. conversacional dentro do MFE.
+- **Integração mais profunda com IA:** o Ollama hoje só sugere prioridade na criação do pedido. Com mais tempo, exploraria outras possibilidades.
 - **Paginação e filtros avançados:** a listagem de pedidos retorna tudo de uma vez; em produção seria necessário paginação e filtros por data, valor e cliente.
-- **Refresh token:** o JWT atual expira e força novo login. Implementaria um fluxo de refresh token silencioso.
 - **Observabilidade:** implementaria logs e registro de tudo que acontece, tanto em relação à saúde da aplicação, quanto em relação a atividade dos usuários.
+- **Gestão de senhas:** Adicionaria a possibilidade do admin resetar senhas de usuários e do próprio usuário mudar a própria senha, além de forçar a criação de nova senha ao logar com a senha criada pelo admin.
 
 ### Decisões Não Tomadas (e Por Quê)
 - **MongoDB**: optei por Redis por me parecer mais simples e já resolve o caso de cache. Talvez MongoDB fizesse mais sentido se os pedidos tivessem schema muito variável, o que não é o caso aqui.
