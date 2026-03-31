@@ -114,20 +114,6 @@ graph TD
 O admin pode acessar `/admin` para visualizar os usuários cadastrados e criar novos com papel `admin` ou `operator`.
 Usuários `operator` só têm acesso à área de pedidos (`/orders`), onde podem listar pedidos (com filtro por status), buscar um pedido pelo número, criar novos pedidos e atualizar o status de pedidos existentes.
 
-## Testes
-
-```bash
-# Users Service
-cd services/users
-pip install -r requirements.txt
-pytest tests/ -v
-
-# Orders Service
-cd services/orders
-pip install -r requirements.txt
-pytest tests/ -v
-```
-
 ## CI Pipeline
 
 GitHub Actions configurado em `.github/workflows/`:
