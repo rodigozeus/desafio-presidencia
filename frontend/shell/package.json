@@ -12,6 +12,9 @@
     "react-dom": "^18.3.0",
     "react-router-dom": "^6.23.0"
   },
+  "overrides": {
+    "lodash": "4.17.21"
+  },
   "devDependencies": {
     "@babel/core": "^7.24.0",
     "@babel/preset-env": "^7.24.0",
