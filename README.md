@@ -105,11 +105,9 @@ graph TD
 
 | Serviço | URL |
 |---------|-----|
-| Frontend (Shell) | http://localhost:3000 |
-| MFE Orders | http://localhost:3001 |
-| MFE Admin | http://localhost:3002 |
-| Users Service API | http://localhost:8001/docs |
-| Orders Service API | http://localhost:8002/docs |
+| Frontend (Shell) | https://damaceno.org |
+| Users Service API (docs) | https://api-users.damaceno.org/docs |
+| Orders Service API (docs) | https://api-orders.damaceno.org/docs |
 
 **Login admin (criado automaticamente):** `admin@admin.com` / `admin123`
 
