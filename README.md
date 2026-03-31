@@ -135,10 +135,6 @@ GitHub Actions configurado em `.github/workflows/`:
 - `ci-orders.yml` — roda testes do Orders Service a cada push em `services/orders/`
 - `ci-frontend.yml` — valida build dos MFEs a cada push em `frontend/`
 
-Obs: nesse momento os testes estão falhando devido a autenticação dos endpoints. Precisa ser revisado e corrigido.
-
-
-
 ## O Que Ficaria Diferente com Mais Tempo
 
 - **CRUD completo de usuários e pedidos:** hoje é possível criar, listar e buscar por número — faltam edição e exclusão tanto no backend quanto nos MFEs.

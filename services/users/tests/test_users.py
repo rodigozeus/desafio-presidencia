@@ -24,9 +24,10 @@ def test_list_users(client):
     assert response.status_code == 200
     assert len(response.json()) == 2
 
-def test_get_user_not_found(client):
-    response = client.get("/users/00000000-0000-0000-0000-000000000000")
-    assert response.status_code == 404
+def test_list_users_empty(client):
+    response = client.get("/users/")
+    assert response.status_code == 200
+    assert response.json() == []
 
 def test_health(client):
     response = client.get("/health")

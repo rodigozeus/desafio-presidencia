@@ -29,11 +29,7 @@ Observações: {notes or 'Nenhuma'}
 
 Retorne exatamente neste formato:
 {{"priority": "low|medium|high", "summary": "resumo curto em português de até 100 caracteres"}}
-
-Critérios de prioridade:
-- high: total > R$500 ou pedido urgente nas observações
-- low: total < R$50 e sem urgência
-- medium: demais casos"""
+"""
 
         response = requests.post(
             OLLAMA_URL,
