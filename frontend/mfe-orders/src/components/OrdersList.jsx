@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { fetchOrders, fetchOrderByNumber } from "../api";
+import { fetchOrders } from "../api";
 import "./OrdersList.css";
 
 const STATUS_LABELS = {
@@ -22,7 +22,6 @@ export default function OrdersList() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [search, setSearch] = useState("");
-  const [searchError, setSearchError] = useState("");
 
   useEffect(() => {
     setLoading(true);
@@ -32,17 +31,11 @@ export default function OrdersList() {
       .finally(() => setLoading(false));
   }, [filter]);
 
-  async function handleSearch(e) {
+  function handleSearch(e) {
     e.preventDefault();
     const n = parseInt(search, 10);
     if (!n) return;
-    setSearchError("");
-    try {
-      const order = await fetchOrderByNumber(n);
-      navigate(`/orders/${order.id}`);
-    } catch {
-      setSearchError(`Pedido #${n} não encontrado.`);
-    }
+    navigate(`/orders/${n}`);
   }
 
   return (
@@ -63,10 +56,9 @@ export default function OrdersList() {
           min="1"
           placeholder="Buscar por número do pedido..."
           value={search}
-          onChange={(e) => { setSearch(e.target.value); setSearchError(""); }}
+          onChange={(e) => setSearch(e.target.value)}
         />
         <button type="submit">Buscar</button>
-        {searchError && <span className="search-error">{searchError}</span>}
       </form>
 
       <div className="orders-filters">
@@ -111,7 +103,7 @@ export default function OrdersList() {
             </thead>
             <tbody>
               {orders.map((order) => (
-                <tr key={order.id} onClick={() => navigate(`/orders/${order.id}`)} className="order-row">
+                <tr key={order.id} onClick={() => navigate(`/orders/${order.order_number}`)} className="order-row">
                   <td className="order-number">#{order.order_number}</td>
                   <td>
                     <div className="customer-name">{order.customer_name}</div>

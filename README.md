@@ -95,11 +95,10 @@ graph TD
 ### Orders Service (porta 8002)
 | Método | Endpoint | Auth | Descrição |
 |--------|----------|------|-----------|
-| GET | `/orders/` | — | Listar pedidos (filtro `?status=`) |
-| POST | `/orders/` | — | Criar pedido (IA sugere prioridade) |
-| GET | `/orders/by-number/{n}` | — | Buscar pedido pelo número sequencial |
-| GET | `/orders/{id}` | — | Buscar pedido por UUID |
-| PATCH | `/orders/{id}/status` | JWT | Atualizar status |
+| GET | `/orders/` | JWT | Listar pedidos (filtro `?status=`) |
+| POST | `/orders/` | JWT | Criar pedido (IA sugere prioridade) |
+| GET | `/orders/{n}` | JWT | Buscar pedido pelo número |
+| PATCH | `/orders/{n}/status` | JWT | Atualizar status |
 | GET | `/health` | — | Health check |
 
 ### Acesse a aplicação

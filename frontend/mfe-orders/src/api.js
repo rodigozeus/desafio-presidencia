@@ -18,16 +18,8 @@ export async function fetchOrders(status = "") {
   return res.json();
 }
 
-export async function fetchOrderByNumber(number) {
-  const res = await fetch(`${ORDERS_API}/orders/by-number/${number}`, {
-    headers: authHeaders(),
-  });
-  if (!res.ok) throw new Error("Pedido não encontrado");
-  return res.json();
-}
-
-export async function fetchOrder(id) {
-  const res = await fetch(`${ORDERS_API}/orders/${id}`, {
+export async function fetchOrder(orderNumber) {
+  const res = await fetch(`${ORDERS_API}/orders/${orderNumber}`, {
     headers: authHeaders(),
   });
   if (!res.ok) throw new Error("Pedido não encontrado");
@@ -47,8 +39,8 @@ export async function createOrder(data) {
   return res.json();
 }
 
-export async function updateOrderStatus(id, status) {
-  const res = await fetch(`${ORDERS_API}/orders/${id}/status`, {
+export async function updateOrderStatus(orderNumber, status) {
+  const res = await fetch(`${ORDERS_API}/orders/${orderNumber}/status`, {
     method: "PATCH",
     headers: { "Content-Type": "application/json", ...authHeaders() },
     body: JSON.stringify({ status }),

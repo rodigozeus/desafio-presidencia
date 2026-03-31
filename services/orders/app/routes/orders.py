@@ -59,46 +59,34 @@ def create_order(
     db.add(order)
     db.commit()
     db.refresh(order)
-    cache_delete_pattern("orders:list:*") # deleta o cache no redis
+    cache_delete_pattern("orders:list:*")
     logger.info(f"Order created: {order.id} priority={order.priority}")
     return order
 
-@router.get("/by-number/{order_number}", response_model=OrderResponse)
-def get_order_by_number(
+@router.get("/{order_number}", response_model=OrderResponse)
+def get_order(
     order_number: int,
     db: Session = Depends(get_db),
     current_user: dict = Depends(get_current_user)
 ):
-    from ..models import Order as OrderModel
-    order = db.query(OrderModel).filter(OrderModel.order_number == order_number).first()
+    order = db.query(Order).filter(Order.order_number == order_number).first()
     if not order:
         raise HTTPException(status_code=404, detail="Pedido não encontrado")
     return order
 
-@router.get("/{order_id}", response_model=OrderResponse)
-def get_order(
-    order_id: str,
-    db: Session = Depends(get_db),
-    current_user: dict = Depends(get_current_user)
-):
-    order = db.query(Order).filter(Order.id == order_id).first()
-    if not order:
-        raise HTTPException(status_code=404, detail="Pedido não encontrado")
-    return order
-
-@router.patch("/{order_id}/status", response_model=OrderResponse)
+@router.patch("/{order_number}/status", response_model=OrderResponse)
 def update_order_status(
-    order_id: str,
+    order_number: int,
     data: OrderStatusUpdate,
     db: Session = Depends(get_db),
     current_user: dict = Depends(get_current_user)
 ):
-    order = db.query(Order).filter(Order.id == order_id).first()
+    order = db.query(Order).filter(Order.order_number == order_number).first()
     if not order:
         raise HTTPException(status_code=404, detail="Pedido não encontrado")
     order.status = data.status
     db.commit()
     db.refresh(order)
     cache_delete_pattern("orders:list:*")
-    logger.info(f"Order {order_id} status updated to {data.status}")
+    logger.info(f"Order {order_number} status updated to {data.status}")
     return order
