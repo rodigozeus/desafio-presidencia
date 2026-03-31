@@ -1,18 +1,16 @@
+import json
 import logging
+import requests
 from typing import Optional
-from .config import settings
 
 logger = logging.getLogger(__name__)
 
+OLLAMA_URL = "http://localhost:11434/api/chat"
+OLLAMA_MODEL = "llama3.2"
+
 def suggest_priority_and_summary(customer_name: str, items: list, notes: Optional[str] = None) -> dict:
-    """Use Claude API to suggest order priority and generate a summary."""
-    if not settings.ANTHROPIC_API_KEY:
-        return {"priority": "medium", "summary": None}
-
+    """Use Ollama (local) to suggest order priority and generate a summary."""
     try:
-        import anthropic
-        client = anthropic.Anthropic(api_key=settings.ANTHROPIC_API_KEY)
-
         items_text = "\n".join([
             f"- {item.get('product_name', item.get('name', 'Produto'))}: {item.get('quantity', 1)}x R${item.get('unit_price', 0):.2f}"
             for item in items
@@ -35,14 +33,19 @@ Critérios de prioridade:
 - low: total < R$50 e sem urgência
 - medium: demais casos"""
 
-        message = client.messages.create(
-            model="claude-haiku-4-5-20251001",
-            max_tokens=200,
-            messages=[{"role": "user", "content": prompt}]
+        response = requests.post(
+            OLLAMA_URL,
+            json={
+                "model": OLLAMA_MODEL,
+                "messages": [{"role": "user", "content": prompt}],
+                "stream": False,
+            },
+            timeout=30,
         )
+        response.raise_for_status()
 
-        import json
-        result = json.loads(message.content[0].text.strip())
+        text = response.json()["message"]["content"].strip()
+        result = json.loads(text)
         priority = result.get("priority", "medium")
         if priority not in ("low", "medium", "high"):
             priority = "medium"
