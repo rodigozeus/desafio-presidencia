@@ -1,0 +1,11 @@
+# Substitua TUNNEL_ID pelo ID gerado no passo 1
+tunnel: a22340df-4716-423b-bb5c-0f3c672db92e
+credentials-file: /etc/cloudflared/a22340df-4716-423b-bb5c-0f3c672db92e.json
+
+ingress:
+  - hostname: damaceno.org
+    service: http://shell:3000
+  - hostname: www.damaceno.org
+    service: http://shell:3000
+  # Regra catch-all obrigatória
+  - service: http_status:404

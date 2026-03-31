@@ -1,0 +1,38 @@
+.orders-page { padding: 32px; max-width: 1200px; margin: 0 auto; }
+.orders-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 24px; }
+.orders-header h1 { font-size: 1.8rem; color: #1a1a2e; margin-bottom: 4px; }
+.orders-count { color: #888; font-size: 0.9rem; }
+.btn-primary { background: #0f3460; color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-size: 0.95rem; font-weight: 500; transition: background 0.2s; }
+.btn-primary:hover { background: #1a4a7a; }
+.orders-filters { display: flex; align-items: center; gap: 12px; margin-bottom: 24px; }
+.orders-filters label { font-weight: 500; color: #555; white-space: nowrap; }
+.filter-buttons { display: flex; gap: 8px; flex-wrap: wrap; }
+.filter-btn { background: white; border: 1.5px solid #e0e0e0; padding: 6px 14px; border-radius: 20px; cursor: pointer; font-size: 0.85rem; transition: all 0.2s; }
+.filter-btn:hover { border-color: #0f3460; color: #0f3460; }
+.filter-btn.active { background: #0f3460; color: white; border-color: #0f3460; }
+.error-box { background: #fee; color: #c00; padding: 12px 16px; border-radius: 8px; margin-bottom: 16px; }
+.loading-box { text-align: center; padding: 60px; color: #888; }
+.empty-box { text-align: center; padding: 80px; color: #888; }
+.empty-box span { font-size: 3rem; display: block; margin-bottom: 12px; }
+.empty-box p { margin-bottom: 20px; font-size: 1.1rem; }
+.orders-table-wrap { background: white; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); overflow: hidden; }
+.orders-table { width: 100%; border-collapse: collapse; }
+.orders-table th { background: #f8f9fa; padding: 14px 16px; text-align: left; font-size: 0.85rem; color: #666; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid #eee; }
+.orders-table td { padding: 16px; border-bottom: 1px solid #f0f0f0; vertical-align: middle; }
+.order-row { cursor: pointer; transition: background 0.15s; }
+.order-row:hover { background: #f8faff; }
+.order-row:last-child td { border-bottom: none; }
+.customer-name { font-weight: 500; color: #1a1a2e; }
+.customer-email { font-size: 0.8rem; color: #999; }
+.amount { font-weight: 600; color: #0f3460; }
+.status-badge { padding: 4px 10px; border-radius: 12px; font-size: 0.8rem; font-weight: 500; }
+.status-pending { background: #fff3cd; color: #856404; }
+.status-processing { background: #cce5ff; color: #004085; }
+.status-shipped { background: #d1ecf1; color: #0c5460; }
+.status-delivered { background: #d4edda; color: #155724; }
+.status-cancelled { background: #f8d7da; color: #721c24; }
+.priority-badge { padding: 4px 10px; border-radius: 12px; font-size: 0.8rem; font-weight: 500; }
+.priority-low { background: #e8f5e9; color: #2e7d32; }
+.priority-medium { background: #fff8e1; color: #f57f17; }
+.priority-high { background: #fce4ec; color: #c62828; }
+.view-link { color: #0f3460; font-size: 0.9rem; }

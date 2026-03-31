@@ -1,0 +1,14 @@
+FROM node:20-alpine AS builder
+WORKDIR /app
+COPY package.json ./
+RUN npm install
+COPY . .
+ARG ORDERS_API_URL=http://localhost:8002
+ENV ORDERS_API_URL=$ORDERS_API_URL
+ENV NODE_ENV=production
+RUN npm run build
+
+FROM nginx:alpine
+COPY --from=builder /app/dist /usr/share/nginx/html
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+EXPOSE 3001

@@ -1,0 +1,112 @@
+version: "3.9"
+
+services:
+  # ─── Databases ───────────────────────────────────────────────
+  users-db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: users_user
+      POSTGRES_PASSWORD: users_pass
+      POSTGRES_DB: users_db
+    volumes:
+      - users_db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U users_user -d users_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  orders-db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: orders_user
+      POSTGRES_PASSWORD: orders_pass
+      POSTGRES_DB: orders_db
+    volumes:
+      - orders_db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U orders_user -d orders_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  # ─── Backend Services ────────────────────────────────────────
+  users-service:
+    build: ./services/users
+    ports:
+      - "8001:8001"
+    environment:
+      DATABASE_URL: postgresql://users_user:users_pass@users-db:5432/users_db
+      JWT_SECRET: ${JWT_SECRET:-super-secret-key-change-in-production}
+    depends_on:
+      users-db:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8001/health')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  orders-service:
+    build: ./services/orders
+    ports:
+      - "8002:8002"
+    environment:
+      DATABASE_URL: postgresql://orders_user:orders_pass@orders-db:5432/orders_db
+      JWT_SECRET: ${JWT_SECRET:-super-secret-key-change-in-production}
+      REDIS_URL: redis://redis:6379/0
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
+    depends_on:
+      orders-db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8002/health')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ─── Frontend MFEs ───────────────────────────────────────────
+  mfe-orders:
+    build:
+      context: ./frontend/mfe-orders
+      args:
+        ORDERS_API_URL: http://localhost:8002
+    ports:
+      - "3001:3001"
+
+  shell:
+    build:
+      context: ./frontend/shell
+    ports:
+      - "3000:3000"
+    depends_on:
+      - mfe-orders
+      - users-service
+      - orders-service
+
+  cloudflared:
+    image: cloudflare/cloudflared:latest
+    container_name: desafio-tunnel
+    restart: unless-stopped
+    command: tunnel --config /etc/cloudflared/config.yml run
+    volumes:
+      - ./cloudflared:/etc/cloudflared:ro
+    depends_on:
+      - shell
+
+volumes:
+  users_db_data:
+  orders_db_data:
+  redis_data:
