@@ -6,7 +6,6 @@ class Settings(BaseSettings):
     JWT_SECRET: str = "super-secret-key-change-in-production"
     JWT_ALGORITHM: str = "HS256"
     REDIS_URL: str = "redis://redis:6379/0"
-    ANTHROPIC_API_KEY: Optional[str] = None
     CACHE_TTL: int = 60  # seconds
 
     class Config:
