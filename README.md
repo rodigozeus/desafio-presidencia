@@ -28,7 +28,7 @@ graph TD
     UsersDB[("PostgreSQL\nusers_db")]
     OrdersDB[("PostgreSQL\norders_db")]
     Redis[("Redis\ncache")]
-    Claude["Claude AI"]
+    Ollama["Ollama\nllama3.2"]
 
     Browser --> Shell
     Shell -->|Module Federation| MFEOrders & MFEAdmin
@@ -40,34 +40,9 @@ graph TD
     Users --> UsersDB
     Orders --> OrdersDB
     Orders --> Redis
-    Orders -->|sugestão de prioridade| Claude
+    Orders -->|sugestão de prioridade| Ollama
 ```
 
----
-
-### Composição dos Microfrontends
-
-```mermaid
-graph LR
-    subgraph Shell["Shell — Host"]
-        PR["ProtectedRoute"]
-        AR["AdminRoute\n(role=admin)"]
-    end
-
-    subgraph O["MFE Orders — Remote"]
-        OA["OrdersApp\n/orders · /orders/new · /orders/:id"]
-    end
-
-    subgraph A["MFE Admin — Remote"]
-        AA["AdminApp\n/admin/users/new"]
-    end
-
-    Shared(["react · react-dom\nreact-router-dom\nsingleton"])
-
-    PR -->|"lazy import"| OA
-    AR -->|"lazy import"| AA
-    Shell & O & A -.-> Shared
-```
 
 **Fluxo de autenticação:**
 1. Frontend faz login no Users Service → recebe JWT + dados do usuário (incluindo `role`)
